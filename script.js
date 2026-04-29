@@ -1,33 +1,31 @@
-const faqQuestions = document.querySelectorAll(".faq-question");
+document.addEventListener("DOMContentLoaded", () => {
+  const faqButtons = document.querySelectorAll(".faq-question");
 
-faqQuestions.forEach((button) => {
-  button.addEventListener("click", () => {
-    const answer = button.nextElementSibling;
-    const isExpanded = button.getAttribute("aria-expanded") === "true";
+  faqButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const item = button.closest(".faq-item");
+      const isOpen = item.classList.contains("active");
 
-    faqQuestions.forEach((item) => {
-      item.setAttribute("aria-expanded", "false");
-      const panel = item.nextElementSibling;
-      panel.style.maxHeight = null;
+      document.querySelectorAll(".faq-item").forEach((el) => {
+        el.classList.remove("active");
+        const question = el.querySelector(".faq-question");
+        if (question) question.setAttribute("aria-expanded", "false");
+      });
+
+      if (!isOpen) {
+        item.classList.add("active");
+        button.setAttribute("aria-expanded", "true");
+      }
     });
-
-    if (!isExpanded) {
-      button.setAttribute("aria-expanded", "true");
-      answer.style.maxHeight = `${answer.scrollHeight}px`;
-    }
   });
+
+  const updatedDate = document.getElementById("updatedDate");
+  if (updatedDate) {
+    const today = new Date();
+    updatedDate.textContent = today.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    });
+  }
 });
-
-const updatedDate = document.getElementById("updated-date");
-
-if (updatedDate) {
-  const date = new Date();
-  const formatter = new Intl.DateTimeFormat("en-GB", {
-    timeZone: "Europe/Lisbon",
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  });
-
-  updatedDate.textContent = formatter.format(date);
-}
